@@ -16,12 +16,31 @@ builder.Services.AddControllers().AddJsonOptions(options=> {
 
 builder.Services.AddAutoMapper(typeof(ApplicationUserMappingProfile).Assembly);
 builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options => {
+    options.AddDefaultPolicy(builder => {
+        builder.WithOrigins("http://localhost:4200")
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+       } );
+});
 
 var app = builder.Build();
 
 
 app.UseExceptionHandlingMiddleware();
 app.UseRouting();
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseCors(policy => policy
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
+
 app.UseAuthentication();
 app.UseAuthorization();
 
